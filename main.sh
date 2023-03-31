@@ -21,8 +21,8 @@ deepspeed --num_gpus=1 finetune.py \
     --base_model 'decapoda-research/llama-7b-hf' \
     --data_path '/code/alpaca-lora-main/dataset/CSN_python_func_code_string.json' \
     --output_dir './lora-csn_python' \
-    --batch_size 8 \
-    --micro_batch_size 2 \
+    --batch_size 9 \
+    --micro_batch_size 3 \
     --num_epochs 1 \
     --learning_rate 1e-3 \
     --cutoff_len 512 \

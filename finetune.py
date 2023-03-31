@@ -109,7 +109,7 @@ def train(
 
     model = LlamaForCausalLM.from_pretrained(
         base_model,
-        load_in_8bit=True,
+        load_in_8bit=False, # True
         torch_dtype=torch.float16,
         device_map=device_map,
     )
@@ -178,6 +178,8 @@ def train(
         task_type="CAUSAL_LM",
     )
     model = get_peft_model(model, config)
+    
+#     model.half() # raise ValueError: Attempting to unscale FP16 gradients.
 
     if data_path.endswith(".json") or data_path.endswith(".jsonl"):
         data = load_dataset("json", data_files=data_path)
@@ -245,7 +247,7 @@ def train(
             output_dir=output_dir,
             save_total_limit=3,
             load_best_model_at_end=True if val_set_size > 0 else False,
-            ddp_find_unused_parameters=False if ddp else None,
+            ddp_find_unused_parameters=False, #False if ddp else None
             group_by_length=group_by_length,
             report_to="wandb" if use_wandb else None,
             run_name=wandb_run_name if use_wandb else None,
@@ -263,6 +265,7 @@ def train(
         )
     ).__get__(model, type(model))
     del old_state_dict
+    print(model.state_dict)
 
     if torch.__version__ >= "2" and sys.platform != "win32":
         model = torch.compile(model)
