@@ -167,7 +167,7 @@ def train(
         tokenized_full_prompt = tokenize(data_point['func_code_string'])
         return tokenized_full_prompt
 
-    model = prepare_model_for_int8_training(model)
+#     model = prepare_model_for_int8_training(model)
 
     config = LoraConfig(
         r=lora_r,
@@ -262,6 +262,7 @@ def train(
             self, old_state_dict()
         )
     ).__get__(model, type(model))
+    del old_state_dict
 
     if torch.__version__ >= "2" and sys.platform != "win32":
         model = torch.compile(model)
